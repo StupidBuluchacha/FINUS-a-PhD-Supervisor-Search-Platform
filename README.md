@@ -1,18 +1,13 @@
 # IT5007-Project-FINUS (FINd Ur Supervisor)
 
-# Version 1.0: Hard Coded Front-end Website
+# Version 2.0: Website with integrated front-end and back-end (also with some fake professors in DB for test)
 
-In the project directory, you can run by:
 
-### `npm install`
+## Execution Steps:
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 1. Open terminal, and move to server folder
+### 2. npm install
+### 3. npm start
 
 Enjoy :coffee: and then code
 
