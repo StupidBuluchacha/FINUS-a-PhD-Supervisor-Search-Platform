@@ -1,7 +1,7 @@
 var {GraphQLNonNull, GraphQLString, GraphQLList} = require('graphql');
 var ProfessorType = require('../queries/professorType');
 var Professor = require('../../models/Professor');
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary');
 
 const addProfessor = {
     type: ProfessorType,
@@ -23,6 +23,32 @@ const addProfessor = {
                 throw new Error(Error)
             }
             return newProfessor
+        } catch (err) {
+            throw new Error(err);
+
+        }
+        
+    }
+}
+
+const addProfessors = {
+    type: ProfessorType,
+    args: {
+        professorsList: {name: 'professorsList', type: new GraphQLList(GraphQLNonNull(GraphQLString))},
+    },
+    resolve: async function (root, {professorsList}) {
+        try {
+            console.log(JSON.stringify(professorsList))
+            professorsList.forEach( async(professor, i) => {
+                console.log(JSON.stringify(professor))
+                const data = {...professor}
+                console.log(data)
+                // const uModel = new Professor(data);
+                // const newProfessor = await uModel.save();
+                // if(!newProfessor) {
+                //     throw new Error(Error)
+                // }
+            })
         } catch (err) {
             throw new Error(err);
 
@@ -80,4 +106,4 @@ const deleteProfessor = {
     }
 }
 
-module.exports = {addProfessor, deleteProfessor, editProfessor}
+module.exports = {addProfessor,addProfessors, deleteProfessor, editProfessor}

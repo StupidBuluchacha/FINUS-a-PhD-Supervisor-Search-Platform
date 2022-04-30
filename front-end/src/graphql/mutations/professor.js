@@ -8,6 +8,14 @@ mutation addProfessor($name: String!, $researchAreas: [String!], $photo: String!
 }
 `;
 
+export const ADD_PROFESSORS = gql`
+mutation addProfessors($professorsList: [Object!]) {
+  addProfessors(professorsList: $professorsList) {
+    _id
+  }
+}
+`;
+
 export const EDIT_PROFESSOR = gql`
 mutation editProfessor($id: String!, $name: String!, $researchAreas: [String!], $photo: String!, $email: String!, $department: String!, $introduction: String!) {
   editProfessor(id: $id, name: $name, photo: $photo,researchAreas: $researchAreas, email: $email, department: $department, introduction: $introduction) {

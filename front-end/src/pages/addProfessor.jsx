@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-expressions */
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { InputLabel, MenuItem, FormHelperText, FormControl, Select, TextField, Button, Chip, CircularProgress } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import BasicTable from "../component/listTable";
 import { blobToBase64 } from '../utils'
-import { ADD_PROFESSOR, EDIT_PROFESSOR } from "../graphql/mutations/professor";
+import { ADD_PROFESSOR, ADD_PROFESSORS, EDIT_PROFESSOR } from "../graphql/mutations/professor";
 import { GET_PROFESSOR } from "../graphql/queries/professor";
 import { isEmpty } from "lodash";
+import readXlsxFile from 'read-excel-file'
+import axios from 'axios'
 
 export default function AddProfessor({ edit }) {
     const { flag } = useParams()
@@ -14,6 +17,7 @@ export default function AddProfessor({ edit }) {
     const { id } = useParams()
 
     const [addProfessor, { data, loading, error }] = useMutation(ADD_PROFESSOR)
+    const [addProfessors,resp] = useMutation(ADD_PROFESSORS)
     const [editProfessor, response] = useMutation(EDIT_PROFESSOR)
 
     const [researchAreasList, setResearchAreasList] = useState([
@@ -77,6 +81,50 @@ export default function AddProfessor({ edit }) {
         const base64String = await blobToBase64(files[0]);
         setState({ ...state, photo: base64String });
     }
+
+
+    const handleUploadExcel = async ({ target: { files } }) => {
+        const schema = {
+            'name': {
+              // JSON object property name.
+              prop: 'name',
+              type: String
+            },
+            'email': {
+              prop: 'email',
+              type: String,
+            },
+            'photo': {
+                // JSON object property photo.
+                prop: 'photo',
+                type: String
+              },
+              'department': {
+                prop: 'department',
+                type: String,
+              },
+              'research': {
+                prop: 'researchAreas',
+                type: String,
+              },
+              'context': {
+                prop: 'introduction',
+                type: String,
+              },
+          }
+          
+          readXlsxFile(files[0], { schema }).then(({ rows, errors }) => {
+            axios.post('/addProfessors', {
+                data: rows
+              })
+              .then((response) => {
+                push('/profList')
+              })
+              .catch((error) => {
+                alert('An error has been occured while uploading excel list')
+              });     
+          })
+    } 
 
     const handleAdd = (e) => {
         e.preventDefault()
@@ -206,6 +254,22 @@ export default function AddProfessor({ edit }) {
                                 type="file"
                                 hidden
                                 onChange={handleUpload}
+                            />
+                        </Button>
+                    </div>
+
+                    <div className="container">
+                        <Button
+                            variant="contained"
+                            component="label"
+                            classes={{ contained: 'main-btn' }}
+                            style={{ marginBottom: '10px' }}
+                        >
+                            Upload Excel file
+                            <input
+                                type="file"
+                                hidden
+                                onChange={handleUploadExcel}
                             />
                         </Button>
                     </div>

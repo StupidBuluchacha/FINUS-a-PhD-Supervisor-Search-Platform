@@ -9,6 +9,8 @@ const database = require('./config/database');
 const cloudinary = require('cloudinary');
 const port = 3000;
 
+const Professor = require('./src/models/Professor');
+
 cloudinary.config({
     cloud_name: 'dvuzy4836',
     api_key: '517711196614376',
@@ -57,6 +59,31 @@ app.use(express.static(path.join(__dirname, 'build')));
 // Handle React routing, return all requests to React app
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.post('/addProfessors', async function (req, res) {
+    try {
+       await req.body.data.forEach( async(professor, i) => {
+            let researchAreaModified = [];
+            let dummyIntro = 'Hello from professor';
+            if(professor.researchAreas !== undefined){
+                researchAreaModified = professor.researchAreas.split(';')
+            }
+            if(professor.introduction !== undefined){
+                dummyIntro = professor.introduction
+            }
+            const data = {...professor, researchAreas: researchAreaModified, introduction: dummyIntro}
+            const uModel = new Professor(data);
+            const newProfessor = await uModel.save();
+            if(!newProfessor) {
+                throw new Error(Error)
+            }
+        })
+        res.json({success: true})
+    } catch (err) {
+        throw new Error(err);
+
+    }
 });
 
 app.listen(port, () => {

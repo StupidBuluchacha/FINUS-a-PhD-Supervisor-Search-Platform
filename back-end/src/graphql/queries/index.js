@@ -1,10 +1,3 @@
-/*
-* We've 3 queries endpoints:
-1. To get a list of all professors.
-2. To get details of a single professor.
-3. To get professor recommendations.
-* */
-
 const {
   GraphQLList,
   GraphQLObjectType,
