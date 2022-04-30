@@ -3,7 +3,7 @@
 
 Execution Steps:
 
-1. Open terminal, and move to server folder
+1. Open terminal, and move to server folder（i.e.back-end）
 2. npm install
 3. npm start
 
