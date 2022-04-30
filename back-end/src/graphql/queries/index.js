@@ -48,7 +48,7 @@ const RootQuery = new GraphQLObjectType({
       }
     },
     recommendations: {
-     type: new GraphQLList(ProfessorType),
+      type: new GraphQLList(ProfessorType),
       args: {
         department: {
           type: (GraphQLString)
@@ -62,13 +62,31 @@ const RootQuery = new GraphQLObjectType({
         },
       },
       resolve: async function (root, param) {
-        const query = [
-          { introduction: { $regex: `.*(${param.keyword}).*`, $options: 'i' } },
-          { researchAreas: { $in : param.researchAreas.toString() === 'All Areas' ? [...expertiseAreas] : [...param.researchAreas] } },
-          { department: param.department === 'both' ? {$in: ['Computer Science', 'Information Systems and Analytics']} : param.department },
+        var insesitiveAreas = [];
+
+        param.researchAreas.forEach(function (item) {
+          var re = new RegExp(item, "i");
+          insesitiveAreas.push(re);
+        })
+        const query = [{
+            introduction: {
+              $regex: `.*(${param.keyword}).*`,
+              $options: 'i'
+            }
+          },
+          {
+            researchAreas: {
+              $in: param.researchAreas.toString() === 'All Areas' ? [...expertiseAreas] : [...insesitiveAreas]
+            }
+          },
+          {
+            department: param.department === 'both' ? {
+              $in: ['Computer Science', 'Information Systems and Analytics']
+            } : param.department
+          },
         ];
         const professors = await Professor.find({
-          $and: query 
+          $and: query
         });
         return professors
 
@@ -79,5 +97,3 @@ const RootQuery = new GraphQLObjectType({
 
 
 module.exports = RootQuery;
-
-
