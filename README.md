@@ -1,4 +1,4 @@
-# Version 2.0: FINUS (FINd Ur Supervisor) Website with integrated front-end and back-end (also with some fake professors in DB for test)
+# Version 2.1: FINUS (FINd Ur Supervisor) Website with integrated front-end and back-end (exclusive for NUS SoC faculty)
 
 
 Execution Steps:
